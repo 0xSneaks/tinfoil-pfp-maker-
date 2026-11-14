@@ -57,6 +57,12 @@
       <button class="primary" id="dl" disabled>⬇ Download PFP</button>
     </div>
     <input type="file" id="file" accept="image/*">
+    <div class="seg" id="hatpick">
+      <button data-hat="hat.png" class="on">🧢 Classic</button>
+      <button data-hat="hat2.png">🔺 Cone</button>
+      <button data-hat="hat3.png">👑 Crown</button>
+      <button data-hat="hat4.png">⚾ Cap</button>
+    </div>
     <div class="seg">
       <button id="mHat" class="on">🧢 Move: HAT</button>
       <button id="mPhoto">🐾 Move: PHOTO</button>
@@ -156,6 +162,14 @@ cv.addEventListener('touchend', end);
 
 sizeEl.addEventListener('input', () => { hatW = S * sizeEl.value/100; draw(); });
 tiltEl.addEventListener('input', draw);
+
+document.querySelectorAll('#hatpick button').forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll('#hatpick button').forEach(x => x.classList.remove('on'));
+    b.classList.add('on');
+    hat.src = b.dataset.hat;
+  };
+});
 
 const mHat = document.getElementById('mHat'), mPhoto = document.getElementById('mPhoto');
 mHat.onclick = () => { mode='hat'; mHat.classList.add('on'); mPhoto.classList.remove('on'); };
