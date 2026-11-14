@@ -16,7 +16,7 @@ No accounts. No uploads leave your browser. The foil does all the work.
 
 ## 🔗 Links
 
-- 🌐 **Live maker:** _the Vercel link goes here after deploy_
+- 🌐 **Live maker:** [https://tinfoil-pfp-maker.vercel.app](https://tinfoil-pfp-maker.vercel.app)
 - 𝕏 **X:** [@TinFoilHatonX](https://x.com/TinFoilHatonX)
 - 💊 **pump.fun:** [tinfoil](https://pump.fun/coin/3D5nV4rQuNJezr6BGfxgQY3qqrtigmEnV2gqSi7ipump)
 
