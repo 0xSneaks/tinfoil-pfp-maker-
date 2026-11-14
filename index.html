@@ -36,6 +36,8 @@
   .ca b{ color:var(--grn); letter-spacing:1px; }
   .links{ display:flex; gap:10px; margin-top:12px; }
   .links a{ flex:1; text-align:center; color:var(--txt); text-decoration:none; border:1px solid var(--line); border-radius:10px; padding:11px 4px; font-size:13px; background:#16202a; }
+  .tip{ margin-top:12px; text-align:center; font-size:11px; color:var(--dim); }
+  .tip code{ display:inline-block; margin-top:5px; background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:6px 10px; font-size:10px; color:var(--grn); word-break:break-all; cursor:pointer; }
   footer{ text-align:center; color:var(--dim); font-size:11px; margin-top:22px; line-height:1.7; }
   #file{ display:none; }
 </style>
@@ -85,6 +87,11 @@
   <div class="links">
     <a href="https://x.com/TinFoilHatonX" target="_blank" rel="noopener">𝕏 @TinFoilHatonX</a>
     <a href="https://pump.fun/coin/3D5nV4rQuNJezr6BGfxgQY3qqrtigmEnV2gqSi7ipump" target="_blank" rel="noopener">💊 pump.fun</a>
+  </div>
+
+  <div class="tip">
+    ☕ tip jar — SOL tips keep the foil shiny (tap to copy)<br>
+    <code id="tipaddr">sneaks.skr · FtuidxSaoNDeTuNTDuf9jLACVwqjgQeBwKTYC54f3GYp</code>
   </div>
 
   <footer>
@@ -183,6 +190,12 @@ dl.onclick = () => {
   a.download = 'tinfoil-pet-pfp.png';
   a.href = cv.toDataURL('image/png');
   a.click();
+};
+
+document.getElementById('tipaddr').onclick = async () => {
+  const a = 'FtuidxSaoNDeTuNTDuf9jLACVwqjgQeBwKTYC54f3GYp';
+  try { await navigator.clipboard.writeText(a); hint.textContent = 'tip address copied ✓ thank you for protecting pets'; }
+  catch { hint.textContent = a; }
 };
 
 document.getElementById('ca').onclick = async () => {
