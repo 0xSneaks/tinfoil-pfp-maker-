@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Launch a Lord — LordDex</title>
+<meta name="description" content="Launch a new Lord coin on pump.fun with a contract address ending in Lord. Your wallet signs; LordDex never touches your keys or funds.">
+<style>
+  :root{
+    --bg:#0a0a0f; --bg2:#12121c; --card:#16161f; --card2:#1c1c28;
+    --gold:#d4a73a; --gold2:#e8c766; --gold-dim:rgba(212,167,58,.35);
+    --text:#f2ead2; --muted:#9a937e; --line:rgba(212,167,58,.22);
+    --radius:16px; --red:#e06c5a; --green:#7fc97f;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:radial-gradient(1200px 600px at 50% -10%, #1d1a12 0%, var(--bg) 55%) fixed, var(--bg);
+    color:var(--text);
+    font-family:"Avenir Next","Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+    min-height:100vh;
+  }
+  .wrap{max-width:640px; margin:0 auto; padding:20px 14px 48px;}
+  header{text-align:center; padding:22px 6px 4px;}
+  .crown{font-size:30px; line-height:1;}
+  h1{
+    font-size:36px; letter-spacing:.12em; font-weight:800; margin-top:6px;
+    background:linear-gradient(180deg,#f6e2a0 0%, var(--gold) 55%, #9a741f 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .tagline{color:var(--muted); font-size:15px; margin-top:4px; letter-spacing:.03em;}
+  .backlink{display:inline-block; margin-top:10px; color:var(--gold2); font-size:13.5px; text-decoration:none; border:1px solid var(--line); padding:6px 14px; border-radius:999px;}
+  .step{
+    margin-top:18px; border:1px solid var(--line); border-radius:var(--radius);
+    background:linear-gradient(180deg,var(--card2),var(--card)); padding:18px;
+  }
+  .step h2{font-size:16px; color:var(--gold2); letter-spacing:.07em; margin-bottom:10px;}
+  .step p{color:#cfc7ab; font-size:14px; line-height:1.55;}
+  .step .small{color:var(--muted); font-size:12.5px; margin-top:8px; line-height:1.5;}
+  label{display:block; font-size:12.5px; font-weight:700; letter-spacing:.06em; color:var(--muted); margin:14px 0 6px;}
+  label:first-of-type{margin-top:2px;}
+  input[type=text], textarea{
+    width:100%; padding:12px 14px; border-radius:12px; border:1px solid var(--line);
+    background:var(--bg2); color:var(--text); font-size:15.5px; outline:none; font-family:inherit;
+  }
+  input[type=text]:focus, textarea:focus{border-color:var(--gold);}
+  textarea{resize:vertical; min-height:74px;}
+  input[type=file]{width:100%; color:var(--muted); font-size:13.5px; margin-top:2px;}
+  .imgprev{margin-top:10px; display:none;}
+  .imgprev img{width:96px; height:96px; object-fit:cover; border-radius:12px; border:1px solid var(--gold-dim);}
+  .btn{
+    display:block; width:100%; margin-top:16px; padding:14px; border-radius:12px; border:none; cursor:pointer;
+    background:linear-gradient(180deg,#e8c766,#c49a2e); color:#191204; font-size:15.5px; font-weight:800; letter-spacing:.03em;
+  }
+  .btn:disabled{opacity:.45; cursor:not-allowed;}
+  .btn.ghost{background:var(--bg2); color:var(--gold2); border:1px solid var(--gold-dim);}
+  .btn.danger{background:var(--bg2); color:var(--red); border:1px solid rgba(224,108,90,.4);}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12.5px; word-break:break-all; line-height:1.55;}
+  .addrbox{margin-top:10px; background:var(--bg2); border:1px solid var(--gold-dim); border-radius:12px; padding:12px;}
+  .addrbox .lord{color:var(--gold2); font-weight:800;}
+  .progress{margin-top:12px; display:none;}
+  .bar{height:10px; border-radius:999px; background:var(--bg2); border:1px solid var(--line); overflow:hidden;}
+  .bar > div{height:100%; width:0%; background:linear-gradient(90deg,#c49a2e,#e8c766); transition:width .3s ease;}
+  .stats{display:flex; flex-wrap:wrap; gap:6px 16px; margin-top:10px; font-size:13px; color:var(--muted);}
+  .stats b{color:var(--text);}
+  .toggle{display:flex; align-items:center; gap:10px; margin-top:16px; font-size:14px; color:#cfc7ab; cursor:pointer;}
+  .toggle input{width:18px; height:18px; accent-color:var(--gold);}
+  .warn{
+    margin-top:18px; border:1px solid rgba(224,108,90,.45); border-radius:var(--radius);
+    background:rgba(224,108,90,.07); padding:14px 16px; font-size:13.5px; line-height:1.55; color:#e8c9c2;
+  }
+  .ok{color:var(--green); font-weight:700;}
+  .err{color:var(--red); font-weight:600;}
+  .statusline{margin-top:12px; font-size:14px; min-height:20px;}
+  .links{display:grid; gap:9px; margin-top:14px;}
+  .links a{
+    display:block; text-align:center; padding:12px; border-radius:12px; text-decoration:none;
+    border:1px solid var(--gold-dim); color:var(--gold2); font-weight:700; font-size:14.5px; background:rgba(212,167,58,.05);
+  }
+  footer{margin-top:30px; text-align:center; color:#6d675a; font-size:12.5px; line-height:1.6; padding:0 10px;}
+  .hidden{display:none !important;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="crown">👑</div>
+    <h1>LAUNCH A LORD</h1>
+    <div class="tagline">Mint a new Lord on pump.fun — every LordDex launch gets a contract address ending in <b style="color:var(--gold2)">Lord</b>.</div>
+    <a class="backlink" href="index.html">← Back to the Dex</a>
+  </header>
+
+  <div class="warn">
+    ⚠️ <b>Mainnet — real money.</b> Creating a coin costs roughly <b>0.02 SOL</b> in pump.fun creation
+    fees and account rent, paid by <b>your</b> wallet. You are the coin's creator. LordDex charges
+    nothing and takes no cut. Nothing here is financial advice.
+  </div>
+
+  <!-- STEP 1 · WALLET -->
+  <section class="step" id="step-wallet">
+    <h2>STEP 1 · CONNECT WALLET</h2>
+    <p>Connect Phantom or Solflare. Your wallet signs the launch transaction — this page never sees your private key.</p>
+    <button class="btn" id="btn-connect">CONNECT WALLET</button>
+    <div class="statusline" id="wallet-status"></div>
+  </section>
+
+  <!-- STEP 2 · COIN DETAILS -->
+  <section class="step" id="step-form">
+    <h2>STEP 2 · THE NEW LORD</h2>
+    <label for="f-name">NAME (max 32 characters)</label>
+    <input type="text" id="f-name" maxlength="32" placeholder="Lord …" autocomplete="off">
+    <label for="f-symbol">TICKER (max 10, no spaces)</label>
+    <input type="text" id="f-symbol" maxlength="10" placeholder="LORD…" autocomplete="off">
+    <label for="f-desc">DESCRIPTION (max 500 characters)</label>
+    <textarea id="f-desc" maxlength="500" placeholder="Every other Lord took his throne…"></textarea>
+    <label for="f-twitter">X / TWITTER URL (optional)</label>
+    <input type="text" id="f-twitter" placeholder="https://x.com/…" autocomplete="off">
+    <label for="f-website">WEBSITE (optional)</label>
+    <input type="text" id="f-website" placeholder="https://…" autocomplete="off">
+    <label for="f-image">IMAGE (PNG, JPG, GIF or WebP · max 3 MB)</label>
+    <input type="file" id="f-image" accept="image/png,image/jpeg,image/gif,image/webp">
+    <div class="imgprev" id="imgprev"><img id="imgprev-img" alt="Coin image preview"></div>
+    <label class="toggle"><input type="checkbox" id="f-hr" checked> Holder rewards — creator fees go to holders (the Lord house standard)</label>
+    <p class="small">The image and details are pinned to IPFS through pump.fun when you launch. Check them twice — a coin's name, ticker and image cannot be changed after creation.</p>
+  </section>
+
+  <!-- STEP 3 · GRIND -->
+  <section class="step" id="step-grind">
+    <h2>STEP 3 · GRIND THE “Lord” ADDRESS</h2>
+    <p>Your browser grinds a fresh mint keypair until its address ends in <b>Lord</b> — about 11 million tries on average, split across your CPU cores. Keep this tab open while it runs.</p>
+    <button class="btn" id="btn-grind" disabled>START GRINDING</button>
+    <button class="btn danger hidden" id="btn-grind-stop">STOP</button>
+    <div class="progress" id="grind-progress">
+      <div class="bar"><div id="grind-bar"></div></div>
+      <div class="stats">
+        <span>Tries: <b id="g-tries">0</b></span>
+        <span>Speed: <b id="g-rate">0</b>/s</span>
+        <span>Elapsed: <b id="g-elapsed">0s</b></span>
+        <span>Avg. time left: <b id="g-eta">—</b></span>
+      </div>
+    </div>
+    <div id="grind-result" class="hidden">
+      <p class="ok">✓ Address found:</p>
+      <div class="addrbox mono" id="mint-addr"></div>
+      <p class="small">This mint keypair was generated in your browser and exists nowhere else. After launch you can
+      download it for your records — anyone holding it holds the mint's keypair file, so keep it somewhere safe.</p>
+      <button class="btn ghost" id="btn-dl-key">⬇ DOWNLOAD MINT KEYPAIR (JSON)</button>
+    </div>
+    <div class="statusline" id="grind-status"></div>
+  </section>
+
+  <!-- STEP 4 · LAUNCH -->
+  <section class="step" id="step-launch">
+    <h2>STEP 4 · LAUNCH</h2>
+    <p>Builds the pump.fun <span class="mono">create_v2</span> transaction with the official Pump SDK, your wallet signs it, and the mint keypair co-signs — exactly how every Lord in the Dex was launched.</p>
+    <button class="btn" id="btn-launch" disabled>🚀 LAUNCH ON PUMP.FUN</button>
+    <div class="statusline" id="launch-status"></div>
+    <div id="launch-result" class="hidden">
+      <p class="ok">👑 Your Lord is live:</p>
+      <div class="addrbox mono" id="final-addr"></div>
+      <div class="links">
+        <a id="link-pump" href="#" target="_blank" rel="noopener">View on pump.fun ↗</a>
+        <a id="link-solscan" href="#" target="_blank" rel="noopener">View the launch transaction ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    Fan-made tool. Not affiliated with ThatMob or pump.fun. LordDex never holds your keys or funds — every signature happens in your wallet.<br>
+    Tip jar: sneaks.skr · FtuidxSaoNDeTuNTDuf9jLACVwqjgQeBwKTYC54f3GYp
+  </footer>
+</div>
+
+<!-- Grind worker source (module worker, spawned from a Blob URL).
+     Pure keypair grinding: noble-ed25519 derives the public key, a hand-rolled
+     base58 encoder renders the address, and we keep the seed whose address
+     ends in the suffix. No network, no keys leave the browser. -->
+<script type="text/js-worker" id="grind-worker-src">
+import * as ed from 'https://esm.sh/@noble/ed25519@2.1.0';
+import { sha512 } from 'https://esm.sh/@noble/hashes@1.5.0/sha512';
+ed.etc.sha512Sync = (...m) => sha512(ed.etc.concatBytes(...m));
+
+const ALPHABET = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+function base58(bytes){
+  let zeros = 0;
+  while (zeros < bytes.length && bytes[zeros] === 0) zeros++;
+  const digits = [0];
+  for (let i = zeros; i < bytes.length; i++){
+    let carry = bytes[i];
+    for (let j = 0; j < digits.length; j++){
+      const v = digits[j] * 256 + carry;
+      digits[j] = v % 58;
+      carry = Math.floor(v / 58);
+    }
+    while (carry > 0){ digits.push(carry % 58); carry = Math.floor(carry / 58); }
+  }
+  let out = '1'.repeat(zeros);
+  for (let i = digits.length - 1; i >= 0; i--) out += ALPHABET[digits[i]];
+  return out;
+}
+
+let suffix = 'Lord';
+let running = false;
+onmessage = (e) => {
+  if (e.data && e.data.suffix) suffix = e.data.suffix;
+  if (e.data && e.data.stop){ running = false; return; }
+  if (!e.data || !e.data.start) return;
+  running = true;
+  const BATCH = 1500;
+  const seeds = new Uint8Array(BATCH * 32);
+  let tries = 0;
+  const tick = () => {
+    if (!running) return;
+    crypto.getRandomValues(seeds);
+    for (let i = 0; i < BATCH; i++){
+      const seed = seeds.subarray(i * 32, i * 32 + 32);
+      const pub = ed.getPublicKey(seed);
+      tries++;
+      if (base58(pub).endsWith(suffix)){
+        running = false;
+        postMessage({ found: true, tries, seed: Array.from(seed), address: base58(pub) });
+        return;
+      }
+    }
+    postMessage({ progress: true, tries });
+    setTimeout(tick, 0);
+  };
+  tick();
+};
+</script>
+
+<script type="module">
+import { Connection, PublicKey, Transaction, ComputeBudgetProgram, Keypair } from 'https://esm.sh/@solana/web3.js@1.95.3';
+import { PumpSdk, OnlinePumpSdk } from 'https://esm.sh/@pump-fun/pump-sdk@4.3.1';
+
+const RPC = 'https://api.mainnet-beta.solana.com';
+const SOL_MINT = new PublicKey('So11111111111111111111111111111111111111112');
+const SUFFIX = 'Lord';
+const EXPECTED_TRIES = Math.pow(58, SUFFIX.length); // 58^4 ≈ 11.3M
+
+const $ = (id) => document.getElementById(id);
+const state = { provider: null, user: null, mintSeed: null, mintAddress: null, mintKeypair: null, workers: [], grinding: false };
+
+function setStatus(id, html, cls){
+  const el = $(id);
+  el.innerHTML = html;
+  el.className = 'statusline' + (cls ? ' ' + cls : '');
+}
+
+/* ---------- Step 1: wallet ---------- */
+function getProvider(){
+  if (window.solflare && window.solflare.isSolflare) return window.solflare;
+  if (window.solana && (window.solana.isPhantom || window.solana.isSolflare)) return window.solana;
+  if (window.solana) return window.solana;
+  return null;
+}
+$('btn-connect').addEventListener('click', async () => {
+  const provider = getProvider();
+  if (!provider){
+    setStatus('wallet-status', '<span class="err">No Solana wallet found. Install Phantom or Solflare, then reload this page.</span>');
+    return;
+  }
+  try {
+    const resp = await provider.connect();
+    const pk = (resp && resp.publicKey) ? resp.publicKey : provider.publicKey;
+    state.provider = provider;
+    state.user = new PublicKey(pk.toString());
+    setStatus('wallet-status', '✓ Connected: <span class="mono">' + state.user.toBase58() + '</span>', 'ok');
+    $('btn-connect').textContent = 'WALLET CONNECTED ✓';
+    $('btn-grind').disabled = false;
+    maybeEnableLaunch();
+  } catch (e) {
+    setStatus('wallet-status', '<span class="err">Connection rejected in the wallet.</span>');
+  }
+});
+
+/* ---------- Step 2: form ---------- */
+$('f-image').addEventListener('change', () => {
+  const f = $('f-image').files[0];
+  if (!f) return;
+  if (f.size > 3 * 1024 * 1024){
+    setStatus('grind-status', '<span class="err">Image is over 3 MB.</span>');
+    $('f-image').value = '';
+    return;
+  }
+  const url = URL.createObjectURL(f);
+  $('imgprev-img').src = url;
+  $('imgprev').style.display = 'block';
+});
+function formValid(){
+  const name = $('f-name').value.trim();
+  const symbol = $('f-symbol').value.trim();
+  if (!name || name.length > 32) return 'Give the Lord a name (1–32 characters).';
+  if (!symbol || /\s/.test(symbol) || symbol.length > 10) return 'Ticker must be 1–10 characters, no spaces.';
+  if ($('f-desc').value.length > 500) return 'Description is over 500 characters.';
+  if (!$('f-image').files[0]) return 'Pick an image for the coin.';
+  return null;
+}
+
+/* ---------- Step 3: grind ---------- */
+function fmt(n){ return n.toLocaleString('en-US'); }
+function fmtDur(s){
+  if (!isFinite(s)) return '—';
+  if (s < 60) return Math.round(s) + 's';
+  return Math.floor(s / 60) + 'm ' + Math.round(s % 60) + 's';
+}
+$('btn-grind').addEventListener('click', () => {
+  const err = formValid();
+  if (err){ setStatus('grind-status', '<span class="err">' + err + '</span>'); return; }
+  if (!state.user){ setStatus('grind-status', '<span class="err">Connect your wallet first (Step 1).</span>'); return; }
+  startGrind();
+});
+$('btn-grind-stop').addEventListener('click', stopGrind);
+
+function startGrind(){
+  stopGrind(true);
+  state.grinding = true;
+  state.mintSeed = null; state.mintAddress = null; state.mintKeypair = null;
+  $('grind-result').classList.add('hidden');
+  $('btn-launch').disabled = true;
+  $('grind-progress').style.display = 'block';
+  $('btn-grind').classList.add('hidden');
+  $('btn-grind-stop').classList.remove('hidden');
+  setStatus('grind-status', 'Grinding… keep this tab open.');
+  const src = $('grind-worker-src').textContent;
+  const url = URL.createObjectURL(new Blob([src], { type: 'text/javascript' }));
+  const nWorkers = Math.min(8, navigator.hardwareConcurrency || 4);
+  let totalTries = 0;
+  const started = Date.now();
+  const perWorker = new Array(nWorkers).fill(0);
+  const timer = setInterval(() => {
+    const el = (Date.now() - started) / 1000;
+    const rate = totalTries / Math.max(el, 0.001);
+    $('g-tries').textContent = fmt(totalTries);
+    $('g-rate').textContent = fmt(Math.round(rate));
+    $('g-elapsed').textContent = fmtDur(el);
+    $('g-eta').textContent = rate > 0 ? fmtDur(Math.max(EXPECTED_TRIES - totalTries, 0) / rate) : '—';
+    $('grind-bar').style.width = Math.min(99, (totalTries / EXPECTED_TRIES) * 100) + '%';
+  }, 250);
+  state.grindTimer = timer;
+  for (let i = 0; i < nWorkers; i++){
+    const w = new Worker(url, { type: 'module' });
+    w.onmessage = (e) => {
+      if (e.data.progress){
+        totalTries += e.data.tries - perWorker[i];
+        perWorker[i] = e.data.tries;
+      } else if (e.data.found){
+        totalTries += e.data.tries - perWorker[i];
+        onGrindFound(e.data, totalTries, started);
+      }
+    };
+    w.onerror = () => setStatus('grind-status', '<span class="err">A grind worker failed to load (CDN blocked?). Check your connection and retry.</span>');
+    state.workers.push(w);
+    w.postMessage({ start: true, suffix: SUFFIX });
+  }
+}
+function stopGrind(silent){
+  state.workers.forEach(w => { try { w.postMessage({ stop: true }); w.terminate(); } catch (e) {} });
+  state.workers = [];
+  if (state.grindTimer){ clearInterval(state.grindTimer); state.grindTimer = null; }
+  if (state.grinding && !silent) setStatus('grind-status', 'Grind stopped.');
+  state.grinding = false;
+  $('btn-grind').classList.remove('hidden');
+  $('btn-grind-stop').classList.add('hidden');
+}
+function onGrindFound(data, totalTries, started){
+  stopGrind(true);
+  $('grind-bar').style.width = '100%';
+  const seed = new Uint8Array(data.seed);
+  const kp = Keypair.fromSeed(seed);
+  const addr = kp.publicKey.toBase58();
+  if (addr !== data.address || !addr.endsWith(SUFFIX)){
+    setStatus('grind-status', '<span class="err">Internal check failed — discarding that keypair. Grind again.</span>');
+    return;
+  }
+  state.mintSeed = seed;
+  state.mintAddress = addr;
+  state.mintKeypair = kp;
+  $('mint-addr').innerHTML = addr.slice(0, addr.length - SUFFIX.length) + '<span class="lord">' + SUFFIX + '</span>';
+  $('grind-result').classList.remove('hidden');
+  setStatus('grind-status', '✓ Found in ' + fmt(totalTries) + ' tries (' + fmtDur((Date.now() - started) / 1000) + '). Now launch it (Step 4).', 'ok');
+  maybeEnableLaunch();
+}
+$('btn-dl-key').addEventListener('click', () => {
+  if (!state.mintKeypair) return;
+  const blob = new Blob([JSON.stringify(Array.from(state.mintKeypair.secretKey))], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'lord-mint-' + state.mintAddress + '.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+
+/* ---------- Step 4: launch ---------- */
+function maybeEnableLaunch(){
+  $('btn-launch').disabled = !(state.user && state.mintKeypair);
+}
+async function uploadMetadata(){
+  // pump.fun's own IPFS endpoint — the keyless upload route pump.fun's site uses.
+  const fd = new FormData();
+  fd.append('file', $('f-image').files[0]);
+  fd.append('name', $('f-name').value.trim());
+  fd.append('symbol', $('f-symbol').value.trim());
+  fd.append('description', $('f-desc').value.trim());
+  fd.append('twitter', $('f-twitter').value.trim());
+  fd.append('telegram', '');
+  fd.append('website', $('f-website').value.trim());
+  fd.append('showName', 'true');
+  const res = await fetch('https://pump.fun/api/ipfs', { method: 'POST', body: fd });
+  if (!res.ok) throw new Error('Metadata upload failed (pump.fun IPFS returned ' + res.status + ').');
+  const body = await res.json();
+  if (!body.metadataUri) throw new Error('Metadata upload returned no URI.');
+  return body.metadataUri;
+}
+$('btn-launch').addEventListener('click', async () => {
+  const err = formValid();
+  if (err){ setStatus('launch-status', '<span class="err">' + err + '</span>'); return; }
+  if (!state.user || !state.mintKeypair){ setStatus('launch-status', '<span class="err">Connect a wallet and grind an address first.</span>'); return; }
+  const btn = $('btn-launch');
+  btn.disabled = true;
+  try {
+    setStatus('launch-status', 'Uploading image + metadata to IPFS…');
+    const uri = await uploadMetadata();
+
+    setStatus('launch-status', 'Building the create transaction with the Pump SDK…');
+    const connection = new Connection(RPC, 'confirmed');
+    const online = new OnlinePumpSdk(connection);
+    const global = await online.fetchGlobal();
+    if (global && global.createV2Enabled === false) throw new Error('Pump has paused new coin creation right now. Try again later.');
+    const resolved = await online.resolveQuoteMint(SOL_MINT);
+    const ix = await new PumpSdk().createV2Instruction({
+      mint: state.mintKeypair.publicKey,
+      name: $('f-name').value.trim(),
+      symbol: $('f-symbol').value.trim(),
+      uri,
+      creator: state.user,
+      user: state.user,
+      mayhemMode: false,
+      holderReward: $('f-hr').checked,
+      quoteMint: SOL_MINT,
+      quoteTokenProgram: resolved.quoteTokenProgram,
+      pumpQuote: resolved.pumpQuote ? resolved.pumpQuote.accounts : undefined,
+    });
+    const tx = new Transaction();
+    tx.add(ComputeBudgetProgram.setComputeUnitLimit({ units: 300000 }));
+    tx.add(ix);
+    const { blockhash } = await connection.getLatestBlockhash('confirmed');
+    tx.recentBlockhash = blockhash;
+    tx.feePayer = state.user;
+    tx.partialSign(state.mintKeypair); // the new coin's mint co-signs the create
+
+    setStatus('launch-status', 'Waiting for your wallet signature…');
+    const signed = await state.provider.signTransaction(tx);
+    setStatus('launch-status', 'Sending…');
+    const sig = await connection.sendRawTransaction(signed.serialize(), { skipPreflight: false });
+    setStatus('launch-status', 'Confirming on-chain…');
+    await connection.confirmTransaction(sig, 'confirmed');
+
+    $('final-addr').innerHTML = state.mintAddress.slice(0, state.mintAddress.length - SUFFIX.length) + '<span class="lord">' + SUFFIX + '</span>';
+    $('link-pump').href = 'https://pump.fun/coin/' + state.mintAddress;
+    $('link-solscan').href = 'https://solscan.io/tx/' + sig;
+    $('launch-result').classList.remove('hidden');
+    setStatus('launch-status', '👑 Launched. Tx: <span class="mono">' + sig + '</span>', 'ok');
+  } catch (e) {
+    setStatus('launch-status', '<span class="err">Launch failed: ' + (e && e.message ? e.message : e) + '</span>');
+    btn.disabled = false;
+  }
+});
+</script>
+</body>
+</html>

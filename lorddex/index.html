@@ -144,7 +144,8 @@
     <div class="crown">👑</div>
     <h1>LORDDEX</h1>
     <div class="tagline">Every Lord. One Dex.</div>
-    <div><span class="counter">20 LORDS INDEXED</span></div>
+    <div><span class="counter">22 LORDS INDEXED</span></div>
+    <div style="margin-top:14px;"><a href="launch.html" style="display:inline-block;padding:11px 22px;border-radius:999px;background:linear-gradient(180deg,#e8c766,#c49a2e);color:#191204;font-weight:800;font-size:14.5px;letter-spacing:.05em;text-decoration:none;">🚀 LAUNCH A NEW LORD</a></div>
   </header>
 
   <div class="controls">
@@ -179,25 +180,27 @@
 <script>
 const LORDS = [
   {no:"000", name:"Lord Aura", symbol:"AURA", pair:"aura", badge:"THE ORIGINAL", status:"Live — the original Lord Aura. Not deployed by us; information only.", ca:"EvbSSzACWAxqFhXdiPypjv6jMhRfHU257x65oFrjpump", art:null, initial:"A"},
-  {no:"001", name:"Lord Falsity (First)", pair:"aura", badge:"AURA PAIRED", status:"Live", ca:"EgdSyr24EryovfiSK5fdckCQeAg9vT7ZgERsRMfeUuvQ", art:"https://tinfoil-pfp-maker.vercel.app/lord-falsity.png", initial:"F"},
-  {no:"002", name:"Lord Falsity (Holder Rewards)", pair:"aura", badge:"AURA PAIRED", status:"Live — holder rewards on", ca:"9ieG7U1WA8Hh4WzSrhc9z1J5rTXpfoA2uxjTckFpcDw5", art:"https://tinfoil-pfp-maker.vercel.app/lord-falsity.png", initial:"F"},
-  {no:"003", name:"Lord Cruelty", pair:"aura", badge:"AURA PAIRED", status:"Live — holder rewards on", ca:"A7zMMkyPLBdJsCDW5uJQSyar592F7eeabudAWzT6Z23B", art:"https://tinfoil-pfp-maker.vercel.app/lord-cruelty.png", initial:"C"},
-  {no:"004", name:"Lord Eclipsity", pair:"aura", badge:"AURA PAIRED", status:"Live", ca:"5o59iofwQf9rocLRe6S47HakmFTEruXxgdASMDThaHpd", art:"https://tinfoil-pfp-maker.vercel.app/lord-eclipsity.png", initial:"E"},
-  {no:"005", name:"Lord Manipulity", pair:"aura", badge:"AURA PAIRED", status:"Live", ca:"AAsEE2hvFcDJkeFhEbxyde4ahJ3FWtutNKXbtoQz1udj", art:"https://tinfoil-pfp-maker.vercel.app/lord-manipulity.png", initial:"M"},
-  {no:"006", name:"Lord Speedity", pair:"aura", badge:"AURA PAIRED", status:"Live", ca:"DPcU7NQNrxKqXzfRJtbHGinQan4PU8p8XJodEUKQbo6M", art:"https://tinfoil-pfp-maker.vercel.app/lord-speedity.png", initial:"S"},
-  {no:"007", name:"Lord Calamity", pair:"aura", badge:"AURA PAIRED", status:"Live", ca:"FgMLUztWLFo42k1Z5xM8TgU1JM11n4keVKA7kRi6UaB6", art:"https://tinfoil-pfp-maker.vercel.app/lord-calamity.png", initial:"C"},
-  {no:"008", name:"Lord Moggity", pair:"aura", badge:"AURA PAIRED", status:"Live", ca:"AbkyEohXiEpKcomFfA534RtrdDxTNukQzPFn1Ydmvsy2", art:"https://tinfoil-pfp-maker.vercel.app/lord-moggity.png", initial:"M"},
-  {no:"009", name:"Lord Purity", pair:"sol", badge:"SOL PAIRED", status:"Live", ca:"DjAG77SptVeYZfUWPUPd5q8htgKhCeFL4eQ7BVGHQ94L", art:"https://tinfoil-pfp-maker.vercel.app/lord-purity.png", initial:"P"},
-  {no:"010", name:"Lord Antiverity", pair:"sol", badge:"SOL PAIRED", status:"Live", ca:"Df8BPCVztEsDSQkgfGLaempUys4Y5YL1ABj3gGC1AP1b", art:"https://tinfoil-pfp-maker.vercel.app/lord-antiverity.png", initial:"A"},
-  {no:"011", name:"Lord Jobity", pair:"sol", badge:"SOL PAIRED", status:"Live", ca:"7xW5ZvNCaxDFYQKNjtKMiWJcxW39HynpSNJVm7vSmc2p", art:"https://tinfoil-pfp-maker.vercel.app/lord-jobity.png", initial:"J"},
-  {no:"012", name:"Lord Ferrity", pair:"sol", badge:"SOL PAIRED", status:"Live", ca:"9aALFEdxoCTf741qEeJDuyLVNRNhHxUxds7jQ8dJFr", art:"https://tinfoil-pfp-maker.vercel.app/lord-ferrity.png", initial:"F"},
-  {no:"013", name:"Lord Curiosity", pair:"sol", badge:"SOL PAIRED", status:"Live", ca:"FQnfGYhuHzZZJf1gEeSWok6zGcz377LcmK4ZaBuCh9EA", art:"https://tinfoil-pfp-maker.vercel.app/lord-curiosity.png", initial:"C"},
-  {no:"014", name:"Lord Freakity", pair:"sol", badge:"SOL PAIRED", status:"Live", ca:"86naFidgZB1zdLZbKL4iodFwzDFWdsPAai9sfw1T6BAc", art:"https://tinfoil-pfp-maker.vercel.app/lord-freakity.png", initial:"F"},
-  {no:"015", name:"Lord Zorya", pair:"sol", badge:"SOL PAIRED", status:"Live", ca:"6j4F8ewaYkXAsGvZee1MAwhDfuZFRjmJwkdL2L6gMx9C", art:"https://tinfoil-pfp-maker.vercel.app/lord-zorya.png", initial:"Z"},
-  {no:"016", name:"Lord Soyjakity", pair:"sol", badge:"SOL PAIRED", status:"Live", ca:"3wH5vAVp5dPU3EmnpYRBhCyKsqB8eHokcH1moRZnP5Dv", art:"https://tinfoil-pfp-maker.vercel.app/lord-soyjakity.png", initial:"S"},
-  {no:"017", name:"Lord Lovity", pair:"aura", badge:"AURA PAIRED", status:"Live — holder rewards on", ca:"CnEkZLNBvD8HHkJkR5Ff1JcVsXgZcx13KBsvbXntmuse", art:"https://gateway.pinata.cloud/ipfs/bafybeibrsrxuxzgne74s2oiovnd24j3hpt2ohddckfndpwaumc35yyyxki", artFallback:"https://gateway.pinata.cloud/ipfs/bafybeibrsrxuxzgne74s2oiovnd24j3hpt2ohddckfndpwaumc35yyyxki", initial:"L"},
-  {no:"018", name:"Lord Larpity", pair:"coming", badge:"COMING", status:"Coming — address reserved, not yet launched", ca:"5Jeavk9WAfkmNozSBPqEsPc7gosTG1Wx2HWBC4RLord", art:"https://tinfoil-pfp-maker.vercel.app/lord-larpity.png", initial:"L"},
-  {no:"019", name:"Lord Falbesity", pair:"coming", badge:"COMING", status:"Coming — address reserved, not yet launched", ca:"E4aaKKVRN6oqXXmoNs571mR6QzR812LvLMPoK53iLord", art:"https://tinfoil-pfp-maker.vercel.app/lord-falbesity.png", initial:"F"}
+  {no:"001", name:"Lord Verity", pair:"aura", badge:"AURA PAIRED", status:"Live — from the original Nov 13 wave. Not deployed by us; information only.", ca:"7w2tvMSYQmYe9atYbCuMNzyd2AV6B2wz8gVEy7XUpump", art:null, initial:"V"},
+  {no:"002", name:"Lord Obesity", pair:"aura", badge:"AURA PAIRED", status:"Live — from the original Nov 13 wave. Not deployed by us; information only.", ca:"CDkVnqtevSQ9kyS7hYPTpDy6MVdc5rFihtVqwo24pump", art:null, initial:"O"},
+  {no:"003", name:"Lord Falsity (First)", pair:"aura", badge:"AURA PAIRED", status:"Live", ca:"EgdSyr24EryovfiSK5fdckCQeAg9vT7ZgERsRMfeUuvQ", art:"https://tinfoil-pfp-maker.vercel.app/lord-falsity.png", initial:"F"},
+  {no:"004", name:"Lord Falsity (Holder Rewards)", pair:"aura", badge:"AURA PAIRED", status:"Live — holder rewards on", ca:"9ieG7U1WA8Hh4WzSrhc9z1J5rTXpfoA2uxjTckFpcDw5", art:"https://tinfoil-pfp-maker.vercel.app/lord-falsity.png", initial:"F"},
+  {no:"005", name:"Lord Cruelty", pair:"aura", badge:"AURA PAIRED", status:"Live — holder rewards on", ca:"A7zMMkyPLBdJsCDW5uJQSyar592F7eeabudAWzT6Z23B", art:"https://tinfoil-pfp-maker.vercel.app/lord-cruelty.png", initial:"C"},
+  {no:"006", name:"Lord Eclipsity", pair:"aura", badge:"AURA PAIRED", status:"Live", ca:"5o59iofwQf9rocLRe6S47HakmFTEruXxgdASMDThaHpd", art:"https://tinfoil-pfp-maker.vercel.app/lord-eclipsity.png", initial:"E"},
+  {no:"007", name:"Lord Manipulity", pair:"aura", badge:"AURA PAIRED", status:"Live", ca:"AAsEE2hvFcDJkeFhEbxyde4ahJ3FWtutNKXbtoQz1udj", art:"https://tinfoil-pfp-maker.vercel.app/lord-manipulity.png", initial:"M"},
+  {no:"008", name:"Lord Speedity", pair:"aura", badge:"AURA PAIRED", status:"Live", ca:"DPcU7NQNrxKqXzfRJtbHGinQan4PU8p8XJodEUKQbo6M", art:"https://tinfoil-pfp-maker.vercel.app/lord-speedity.png", initial:"S"},
+  {no:"009", name:"Lord Calamity", pair:"aura", badge:"AURA PAIRED", status:"Live", ca:"FgMLUztWLFo42k1Z5xM8TgU1JM11n4keVKA7kRi6UaB6", art:"https://tinfoil-pfp-maker.vercel.app/lord-calamity.png", initial:"C"},
+  {no:"010", name:"Lord Moggity", pair:"aura", badge:"AURA PAIRED", status:"Live", ca:"AbkyEohXiEpKcomFfA534RtrdDxTNukQzPFn1Ydmvsy2", art:"https://tinfoil-pfp-maker.vercel.app/lord-moggity.png", initial:"M"},
+  {no:"011", name:"Lord Purity", pair:"sol", badge:"SOL PAIRED", status:"Live", ca:"DjAG77SptVeYZfUWPUPd5q8htgKhCeFL4eQ7BVGHQ94L", art:"https://tinfoil-pfp-maker.vercel.app/lord-purity.png", initial:"P"},
+  {no:"012", name:"Lord Antiverity", pair:"sol", badge:"SOL PAIRED", status:"Live", ca:"Df8BPCVztEsDSQkgfGLaempUys4Y5YL1ABj3gGC1AP1b", art:"https://tinfoil-pfp-maker.vercel.app/lord-antiverity.png", initial:"A"},
+  {no:"013", name:"Lord Jobity", pair:"sol", badge:"SOL PAIRED", status:"Live", ca:"7xW5ZvNCaxDFYQKNjtKMiWJcxW39HynpSNJVm7vSmc2p", art:"https://tinfoil-pfp-maker.vercel.app/lord-jobity.png", initial:"J"},
+  {no:"014", name:"Lord Ferrity", pair:"sol", badge:"SOL PAIRED", status:"Live", ca:"9aALFEdxoCTf741qEeJDuyLVNRNhHxUxskds7jQ8dJFr", art:"https://tinfoil-pfp-maker.vercel.app/lord-ferrity.png", initial:"F"},
+  {no:"015", name:"Lord Curiosity", pair:"sol", badge:"SOL PAIRED", status:"Live", ca:"FQnfGYhuHzZZJf1gEeSWok6zGcz377LcmK4ZaBuCh9EA", art:"https://tinfoil-pfp-maker.vercel.app/lord-curiosity.png", initial:"C"},
+  {no:"016", name:"Lord Freakity", pair:"sol", badge:"SOL PAIRED", status:"Live", ca:"86naFidgZB1zdLZbKL4iodFwzDFWdsPAai9sfw1T6BAc", art:"https://tinfoil-pfp-maker.vercel.app/lord-freakity.png", initial:"F"},
+  {no:"017", name:"Lord Zorya", pair:"sol", badge:"SOL PAIRED", status:"Live", ca:"6j4F8ewaYkXAsGvZee1MAwhDfuZFRjmJwkdL2L6gMx9C", art:"https://tinfoil-pfp-maker.vercel.app/lord-zorya.png", initial:"Z"},
+  {no:"018", name:"Lord Soyjakity", pair:"sol", badge:"SOL PAIRED", status:"Live", ca:"3wH5vAVp5dPU3EmnpYRBhCyKsqB8eHokcH1moRZnP5Dv", art:"https://tinfoil-pfp-maker.vercel.app/lord-soyjakity.png", initial:"S"},
+  {no:"019", name:"Lord Lovity", pair:"aura", badge:"AURA PAIRED", status:"Live — holder rewards on", ca:"CnEkZLNBvD8HHkJkR5Ff1JcVsXgZcx13KBsvbXntmuse", art:"https://gateway.pinata.cloud/ipfs/bafybeibrsrxuxzgne74s2oiovnd24j3hpt2ohddckfndpwaumc35yyyxki", artFallback:"https://gateway.pinata.cloud/ipfs/bafybeibrsrxuxzgne74s2oiovnd24j3hpt2ohddckfndpwaumc35yyyxki", initial:"L"},
+  {no:"020", name:"Lord Larpity", pair:"coming", badge:"COMING", status:"Coming — address reserved, not yet launched", ca:"5Jeavk9WAfkmNozSBPqEsPc7gosTG1Wx2HWBC4RLord", art:"https://tinfoil-pfp-maker.vercel.app/lord-larpity.png", initial:"L"},
+  {no:"021", name:"Lord Falbesity", pair:"coming", badge:"COMING", status:"Coming — address reserved, not yet launched", ca:"E4aaKKVRN6oqXXmoNs571mR6QzR812LvLMPoK53iLord", art:"https://tinfoil-pfp-maker.vercel.app/lord-falbesity.png", initial:"F"}
 ];
 
 const grid = document.getElementById('grid');
