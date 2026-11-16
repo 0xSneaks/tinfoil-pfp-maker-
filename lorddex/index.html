@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LordDex — Every Lord. One Dex.</title>
+<meta name="description" content="A Pokédex-style collection of the Lord coins. Every Lord. One Dex.">
+<style>
+  :root{
+    --bg:#0a0a0f; --bg2:#12121c; --card:#16161f; --card2:#1c1c28;
+    --gold:#d4a73a; --gold2:#e8c766; --gold-dim:rgba(212,167,58,.35);
+    --text:#f2ead2; --muted:#9a937e; --line:rgba(212,167,58,.22);
+    --radius:16px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:radial-gradient(1200px 600px at 50% -10%, #1d1a12 0%, var(--bg) 55%) fixed, var(--bg);
+    color:var(--text);
+    font-family:"Avenir Next","Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+    min-height:100vh;
+  }
+  .wrap{max-width:1080px; margin:0 auto; padding:20px 14px 40px;}
+  header{text-align:center; padding:26px 6px 8px;}
+  .crown{font-size:30px; line-height:1;}
+  h1{
+    font-size:44px; letter-spacing:.14em; font-weight:800; margin-top:6px;
+    background:linear-gradient(180deg,#f6e2a0 0%, var(--gold) 55%, #9a741f 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .tagline{color:var(--muted); font-size:16px; margin-top:4px; letter-spacing:.04em;}
+  .counter{
+    display:inline-block; margin-top:12px; padding:5px 14px; border:1px solid var(--gold-dim);
+    border-radius:999px; color:var(--gold2); font-size:13px; letter-spacing:.08em; background:rgba(212,167,58,.06);
+  }
+  .controls{margin:22px auto 6px; max-width:640px;}
+  .search{
+    width:100%; padding:13px 16px; border-radius:12px; border:1px solid var(--line);
+    background:var(--bg2); color:var(--text); font-size:16px; outline:none;
+  }
+  .search:focus{border-color:var(--gold);}
+  .search::placeholder{color:#6d675a;}
+  .chips{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:12px;}
+  .chip{
+    padding:8px 16px; border-radius:999px; border:1px solid var(--line); background:var(--bg2);
+    color:var(--muted); font-size:13px; font-weight:600; letter-spacing:.05em; cursor:pointer;
+  }
+  .chip.active{background:linear-gradient(180deg,#e8c766,#c49a2e); color:#191204; border-color:transparent;}
+  .grid{
+    display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:20px;
+  }
+  @media (min-width:640px){ .grid{grid-template-columns:repeat(3,1fr); gap:16px;} }
+  @media (min-width:960px){ .grid{grid-template-columns:repeat(4,1fr);} }
+  .card{
+    background:linear-gradient(180deg,var(--card2),var(--card)); border:1px solid var(--line);
+    border-radius:var(--radius); overflow:hidden; cursor:pointer; text-align:left; width:100%;
+    color:var(--text); font:inherit; padding:0; transition:transform .12s ease, border-color .12s ease;
+  }
+  .card:hover,.card:focus-visible{transform:translateY(-2px); border-color:var(--gold);}
+  .art{aspect-ratio:1/1; background:#0d0d14; display:flex; align-items:center; justify-content:center; overflow:hidden;}
+  .art img{width:100%; height:100%; object-fit:cover; display:block;}
+  .emblem{
+    width:64px; height:64px; border-radius:50%; border:2px solid var(--gold);
+    display:flex; align-items:center; justify-content:center; font-size:30px; font-weight:800; color:var(--gold2);
+    background:radial-gradient(circle at 35% 30%, #2b2413, #141007); box-shadow:0 0 24px rgba(212,167,58,.25) inset;
+  }
+  .card-body{padding:10px 12px 12px;}
+  .dexno{font-size:11px; color:var(--muted); letter-spacing:.12em;}
+  .name{font-size:16px; font-weight:700; margin:2px 0 7px; line-height:1.2;}
+  .badge{
+    display:inline-block; font-size:10px; font-weight:800; letter-spacing:.1em; padding:3px 8px;
+    border-radius:6px; border:1px solid var(--gold-dim); color:var(--gold2); background:rgba(212,167,58,.08);
+  }
+  .badge.coming{color:#c9c2ae; border-color:rgba(255,255,255,.18); background:rgba(255,255,255,.05);}
+  .ca-row{display:flex; align-items:center; gap:6px; margin-top:9px;}
+  .ca-short{
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:11.5px; color:var(--muted);
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1;
+  }
+  .copy-btn{
+    border:1px solid var(--line); background:var(--bg2); color:var(--gold2); border-radius:8px;
+    font-size:11px; font-weight:700; padding:5px 9px; cursor:pointer; flex:none;
+  }
+  .copy-btn:active{background:var(--gold); color:#191204;}
+  .empty{display:none; text-align:center; color:var(--muted); padding:34px 0 6px; font-size:15px;}
+  section.feepool{
+    margin-top:36px; border:1px solid var(--line); border-radius:var(--radius);
+    background:linear-gradient(180deg, rgba(212,167,58,.07), rgba(212,167,58,.02)); padding:20px 18px;
+  }
+  section.feepool h2{font-size:19px; color:var(--gold2); letter-spacing:.06em; margin-bottom:8px;}
+  section.feepool p{color:#cfc7ab; font-size:14.5px; line-height:1.55;}
+  footer{margin-top:30px; text-align:center; color:#6d675a; font-size:12.5px; line-height:1.6; padding:0 10px;}
+  /* Detail panel */
+  .overlay{
+    position:fixed; inset:0; background:rgba(4,4,8,.78); backdrop-filter:blur(3px);
+    display:none; align-items:flex-end; justify-content:center; z-index:50;
+  }
+  .overlay.open{display:flex;}
+  @media (min-width:640px){ .overlay{align-items:center; padding:20px;} }
+  .panel{
+    background:var(--card); border:1px solid var(--gold-dim); width:100%; max-width:520px;
+    border-radius:20px 20px 0 0; max-height:92vh; overflow-y:auto; padding:18px 18px 24px;
+  }
+  @media (min-width:640px){ .panel{border-radius:20px;} }
+  .panel .art{border-radius:14px;}
+  .panel .emblem{width:96px; height:96px; font-size:44px;}
+  .panel h3{font-size:24px; margin-top:14px;}
+  .panel .dexno{margin-top:2px;}
+  .kv{margin-top:14px; display:grid; gap:8px;}
+  .kv .row{display:flex; justify-content:space-between; gap:12px; font-size:14px; border-bottom:1px dashed rgba(255,255,255,.07); padding-bottom:8px;}
+  .kv .k{color:var(--muted);} .kv .v{font-weight:600; text-align:right;}
+  .full-ca{
+    margin-top:14px; background:var(--bg2); border:1px solid var(--line); border-radius:12px; padding:12px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12.5px; word-break:break-all; line-height:1.5;
+  }
+  .panel .copy-wide{
+    margin-top:10px; width:100%; padding:12px; border-radius:12px; border:none; cursor:pointer;
+    background:linear-gradient(180deg,#e8c766,#c49a2e); color:#191204; font-size:15px; font-weight:800; letter-spacing:.03em;
+  }
+  .links{display:grid; gap:9px; margin-top:16px;}
+  .links a{
+    display:block; text-align:center; padding:12px; border-radius:12px; text-decoration:none;
+    border:1px solid var(--gold-dim); color:var(--gold2); font-weight:700; font-size:14.5px; background:rgba(212,167,58,.05);
+  }
+  .notyet{
+    margin-top:16px; text-align:center; padding:13px; border-radius:12px; border:1px dashed rgba(255,255,255,.2);
+    color:var(--muted); font-weight:600; font-size:14.5px;
+  }
+  .close-btn{
+    float:right; border:1px solid var(--line); background:var(--bg2); color:var(--text);
+    width:36px; height:36px; border-radius:50%; font-size:17px; cursor:pointer; line-height:1;
+  }
+  .toast{
+    position:fixed; left:50%; bottom:26px; transform:translateX(-50%) translateY(20px); opacity:0;
+    background:#221d0e; border:1px solid var(--gold); color:var(--gold2); padding:10px 18px; border-radius:999px;
+    font-size:13.5px; font-weight:700; z-index:99; transition:all .2s ease; pointer-events:none;
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="crown">👑</div>
+    <h1>LORDDEX</h1>
+    <div class="tagline">Every Lord. One Dex.</div>
+    <div><span class="counter">20 LORDS INDEXED</span></div>
+  </header>
+
+  <div class="controls">
+    <input id="search" class="search" type="search" placeholder="Search the Lords…" autocomplete="off">
+    <div class="chips" id="chips">
+      <button class="chip active" data-filter="all">All</button>
+      <button class="chip" data-filter="sol">SOL Paired</button>
+      <button class="chip" data-filter="aura">AURA Paired</button>
+      <button class="chip" data-filter="coming">Coming</button>
+    </div>
+  </div>
+
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty">No Lords match that search.</div>
+
+  <section class="feepool">
+    <h2>💰 THE FEE POOL</h2>
+    <p>Creator fees from the SOL-paired Lords pool in SOL. Creator fees from the AURA-paired Lords accrue in AURA. The pool funds what comes next for the kingdom — including a claim share held for ThatMob, the creator of the Lords.</p>
+  </section>
+
+  <footer>
+    Fan-made collection. Not affiliated with ThatMob. Nothing here is financial advice.<br>
+    Tip jar: sneaks.skr · FtuidxSaoNDeTuNTDuf9jLACVwqjgQeBwKTYC54f3GYp
+  </footer>
+</div>
+
+<div class="overlay" id="overlay" role="dialog" aria-modal="true">
+  <div class="panel" id="panel"></div>
+</div>
+<div class="toast" id="toast">CA copied ✓</div>
+
+<script>
+const LORDS = [
+  {no:"000", name:"Lord Aura", symbol:"AURA", pair:"aura", badge:"THE ORIGINAL", status:"Live — the original Lord Aura. Not deployed by us; information only.", ca:"EvbSSzACWAxqFhXdiPypjv6jMhRfHU257x65oFrjpump", art:null, initial:"A"},
+  {no:"001", name:"Lord Falsity (First)", pair:"aura", badge:"AURA PAIRED", status:"Live", ca:"EgdSyr24EryovfiSK5fdckCQeAg9vT7ZgERsRMfeUuvQ", art:"https://tinfoil-pfp-maker.vercel.app/lord-falsity.png", initial:"F"},
+  {no:"002", name:"Lord Falsity (Holder Rewards)", pair:"aura", badge:"AURA PAIRED", status:"Live — holder rewards on", ca:"9ieG7U1WA8Hh4WzSrhc9z1J5rTXpfoA2uxjTckFpcDw5", art:"https://tinfoil-pfp-maker.vercel.app/lord-falsity.png", initial:"F"},
+  {no:"003", name:"Lord Cruelty", pair:"aura", badge:"AURA PAIRED", status:"Live — holder rewards on", ca:"A7zMMkyPLBdJsCDW5uJQSyar592F7eeabudAWzT6Z23B", art:"https://tinfoil-pfp-maker.vercel.app/lord-cruelty.png", initial:"C"},
+  {no:"004", name:"Lord Eclipsity", pair:"aura", badge:"AURA PAIRED", status:"Live", ca:"5o59iofwQf9rocLRe6S47HakmFTEruXxgdASMDThaHpd", art:"https://tinfoil-pfp-maker.vercel.app/lord-eclipsity.png", initial:"E"},
+  {no:"005", name:"Lord Manipulity", pair:"aura", badge:"AURA PAIRED", status:"Live", ca:"AAsEE2hvFcDJkeFhEbxyde4ahJ3FWtutNKXbtoQz1udj", art:"https://tinfoil-pfp-maker.vercel.app/lord-manipulity.png", initial:"M"},
+  {no:"006", name:"Lord Speedity", pair:"aura", badge:"AURA PAIRED", status:"Live", ca:"DPcU7NQNrxKqXzfRJtbHGinQan4PU8p8XJodEUKQbo6M", art:"https://tinfoil-pfp-maker.vercel.app/lord-speedity.png", initial:"S"},
+  {no:"007", name:"Lord Calamity", pair:"aura", badge:"AURA PAIRED", status:"Live", ca:"FgMLUztWLFo42k1Z5xM8TgU1JM11n4keVKA7kRi6UaB6", art:"https://tinfoil-pfp-maker.vercel.app/lord-calamity.png", initial:"C"},
+  {no:"008", name:"Lord Moggity", pair:"aura", badge:"AURA PAIRED", status:"Live", ca:"AbkyEohXiEpKcomFfA534RtrdDxTNukQzPFn1Ydmvsy2", art:"https://tinfoil-pfp-maker.vercel.app/lord-moggity.png", initial:"M"},
+  {no:"009", name:"Lord Purity", pair:"sol", badge:"SOL PAIRED", status:"Live", ca:"DjAG77SptVeYZfUWPUPd5q8htgKhCeFL4eQ7BVGHQ94L", art:"https://tinfoil-pfp-maker.vercel.app/lord-purity.png", initial:"P"},
+  {no:"010", name:"Lord Antiverity", pair:"sol", badge:"SOL PAIRED", status:"Live", ca:"Df8BPCVztEsDSQkgfGLaempUys4Y5YL1ABj3gGC1AP1b", art:"https://tinfoil-pfp-maker.vercel.app/lord-antiverity.png", initial:"A"},
+  {no:"011", name:"Lord Jobity", pair:"sol", badge:"SOL PAIRED", status:"Live", ca:"7xW5ZvNCaxDFYQKNjtKMiWJcxW39HynpSNJVm7vSmc2p", art:"https://tinfoil-pfp-maker.vercel.app/lord-jobity.png", initial:"J"},
+  {no:"012", name:"Lord Ferrity", pair:"sol", badge:"SOL PAIRED", status:"Live", ca:"9aALFEdxoCTf741qEeJDuyLVNRNhHxUxds7jQ8dJFr", art:"https://tinfoil-pfp-maker.vercel.app/lord-ferrity.png", initial:"F"},
+  {no:"013", name:"Lord Curiosity", pair:"sol", badge:"SOL PAIRED", status:"Live", ca:"FQnfGYhuHzZZJf1gEeSWok6zGcz377LcmK4ZaBuCh9EA", art:"https://tinfoil-pfp-maker.vercel.app/lord-curiosity.png", initial:"C"},
+  {no:"014", name:"Lord Freakity", pair:"sol", badge:"SOL PAIRED", status:"Live", ca:"86naFidgZB1zdLZbKL4iodFwzDFWdsPAai9sfw1T6BAc", art:"https://tinfoil-pfp-maker.vercel.app/lord-freakity.png", initial:"F"},
+  {no:"015", name:"Lord Zorya", pair:"sol", badge:"SOL PAIRED", status:"Live", ca:"6j4F8ewaYkXAsGvZee1MAwhDfuZFRjmJwkdL2L6gMx9C", art:"https://tinfoil-pfp-maker.vercel.app/lord-zorya.png", initial:"Z"},
+  {no:"016", name:"Lord Soyjakity", pair:"sol", badge:"SOL PAIRED", status:"Live", ca:"3wH5vAVp5dPU3EmnpYRBhCyKsqB8eHokcH1moRZnP5Dv", art:"https://tinfoil-pfp-maker.vercel.app/lord-soyjakity.png", initial:"S"},
+  {no:"017", name:"Lord Lovity", pair:"aura", badge:"AURA PAIRED", status:"Live — holder rewards on", ca:"CnEkZLNBvD8HHkJkR5Ff1JcVsXgZcx13KBsvbXntmuse", art:"https://gateway.pinata.cloud/ipfs/bafybeibrsrxuxzgne74s2oiovnd24j3hpt2ohddckfndpwaumc35yyyxki", artFallback:"https://gateway.pinata.cloud/ipfs/bafybeibrsrxuxzgne74s2oiovnd24j3hpt2ohddckfndpwaumc35yyyxki", initial:"L"},
+  {no:"018", name:"Lord Larpity", pair:"coming", badge:"COMING", status:"Coming — address reserved, not yet launched", ca:"5Jeavk9WAfkmNozSBPqEsPc7gosTG1Wx2HWBC4RLord", art:"https://tinfoil-pfp-maker.vercel.app/lord-larpity.png", initial:"L"},
+  {no:"019", name:"Lord Falbesity", pair:"coming", badge:"COMING", status:"Coming — address reserved, not yet launched", ca:"E4aaKKVRN6oqXXmoNs571mR6QzR812LvLMPoK53iLord", art:"https://tinfoil-pfp-maker.vercel.app/lord-falbesity.png", initial:"F"}
+];
+
+const grid = document.getElementById('grid');
+const emptyEl = document.getElementById('empty');
+const overlay = document.getElementById('overlay');
+const panel = document.getElementById('panel');
+const toast = document.getElementById('toast');
+let activeFilter = 'all';
+let query = '';
+
+function shortCA(ca){ return ca.slice(0,6) + '…' + ca.slice(-4); }
+function pairLabel(l){
+  if(l.pair === 'sol') return 'SOL paired';
+  if(l.pair === 'coming') return 'SOL paired (at launch)';
+  if(l.name === 'Lord Aura') return 'The original';
+  return 'AURA paired';
+}
+function artHTML(l, big){
+  if(l.art){
+    const fb = l.artFallback ? ` onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='${l.artFallback}';}else{this.parentNode.innerHTML='<div class=\\'emblem\\'>${l.initial}</div>';}"` : ` onerror="this.parentNode.innerHTML='<div class=\\'emblem\\'>${l.initial}</div>'"`;
+    return `<img src="${l.art}" alt="${l.name}" loading="lazy"${fb}>`;
+  }
+  return `<div class="emblem">${l.initial}</div>`;
+}
+function copyCA(ca, ev){
+  if(ev) ev.stopPropagation();
+  const done = () => { toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'), 1400); };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(ca).then(done).catch(()=>fallbackCopy(ca, done));
+  } else fallbackCopy(ca, done);
+}
+function fallbackCopy(text, done){
+  const ta = document.createElement('textarea');
+  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); done(); } catch(e){}
+  document.body.removeChild(ta);
+}
+function render(){
+  const items = LORDS.filter(l =>
+    (activeFilter === 'all' || l.pair === activeFilter) &&
+    l.name.toLowerCase().includes(query)
+  );
+  grid.innerHTML = items.map(l => `
+    <button class="card" onclick="openDetail('${l.ca}')">
+      <div class="art">${artHTML(l)}</div>
+      <div class="card-body">
+        <div class="dexno">#${l.no}</div>
+        <div class="name">${l.name}</div>
+        <span class="badge${l.pair==='coming' ? ' coming' : ''}">${l.badge}</span>
+        <div class="ca-row">
+          <span class="ca-short">${shortCA(l.ca)}</span>
+          <span class="copy-btn" role="button" onclick="copyCA('${l.ca}', event)">COPY</span>
+        </div>
+      </div>
+    </button>`).join('');
+  emptyEl.style.display = items.length ? 'none' : 'block';
+}
+function openDetail(ca){
+  const l = LORDS.find(x => x.ca === ca);
+  if(!l) return;
+  const links = l.pair === 'coming'
+    ? `<div class="notyet">🚧 Not yet launched — address reserved.</div>`
+    : `<div class="links">
+        <a href="https://dexscreener.com/solana/${l.ca}" target="_blank" rel="noopener">View on DexScreener ↗</a>
+        <a href="https://gmgn.ai/sol/token/${l.ca}" target="_blank" rel="noopener">View on GMGN ↗</a>
+        <a href="https://pump.fun/coin/${l.ca}" target="_blank" rel="noopener">View on pump.fun ↗</a>
+      </div>`;
+  panel.innerHTML = `
+    <button class="close-btn" onclick="closeDetail()" aria-label="Close">✕</button>
+    <div class="art">${artHTML(l, true)}</div>
+    <h3>${l.name}</h3>
+    <div class="dexno">#${l.no}${l.symbol ? ' · $' + l.symbol : ''}</div>
+    <div class="kv">
+      <div class="row"><span class="k">Pair</span><span class="v">${pairLabel(l)}</span></div>
+      <div class="row"><span class="k">Status</span><span class="v">${l.status}</span></div>
+      <div class="row"><span class="k">Badge</span><span class="v">${l.badge}</span></div>
+    </div>
+    <div class="full-ca">${l.ca}</div>
+    <button class="copy-wide" onclick="copyCA('${l.ca}', event)">COPY CONTRACT ADDRESS</button>
+    ${links}`;
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeDetail(){
+  overlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+overlay.addEventListener('click', e => { if(e.target === overlay) closeDetail(); });
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeDetail(); });
+document.getElementById('search').addEventListener('input', e => { query = e.target.value.trim().toLowerCase(); render(); });
+document.getElementById('chips').addEventListener('click', e => {
+  const btn = e.target.closest('.chip'); if(!btn) return;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  activeFilter = btn.dataset.filter;
+  render();
+});
+render();
+</script>
+</body>
+</html>
